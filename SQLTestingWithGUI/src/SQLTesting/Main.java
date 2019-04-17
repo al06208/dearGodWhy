@@ -35,26 +35,26 @@ public class Main {
 		mainFrame = new JFrame("Test Program");
 		mainFrame.setBounds(100,100,500,550);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainFrame.getContentPane().setLayout(null);
+		JPanel panel = new JPanel();
+		//mainFrame.getContentPane().setLayout(null);
 		
 		String connectionUrl = "jdbc:sqlserver://den1.mssql8.gear.host;databaseName=gsuprojectdb;user=gsuprojectdb;password=thisisbullshit123!";
 		try (Connection con = DriverManager.getConnection(connectionUrl); Statement stmt = con.createStatement();) {
-            String SQL = "SELECT COUNT(CustomerID) as numCustomers FROM customers;";
+            String SQL = "SELECT COUNT(primaryKey) as numKeys FROM testTable;";
             ResultSet rs = stmt.executeQuery(SQL);
             rs.next();
-            int numRows = Integer.parseInt(rs.getString("numCustomers"));
+            int numRows = Integer.parseInt(rs.getString("numKeys"));
             Object[][] content = new Object[numRows][3];
-            SQL = "SELECT * FROM customers;";
+            SQL = "SELECT * FROM testTable;";
             Statement stmt2 = con.createStatement();
             ResultSet rs2 = stmt2.executeQuery(SQL);
             int index = 0;
             while(rs2.next()) {
-            	content[index][0] = rs2.getString("CustomerID");
-            	content[index][1] = rs2.getString("FirstName");
-            	content[index][2] = rs2.getString("LastName");
+            	content[index][0] = rs2.getString("primaryKey");
+            	content[index][1] = rs2.getString("testString");
             	index++;
             }
-            String[] columns = {"CustId","CustFirst","CustLast"};
+            String[] columns = {"primaryKey","testString"};
             results = new JTable(content, columns);
 
     		
@@ -64,7 +64,10 @@ public class Main {
         }
 		results.setBounds(10,10,400,400);
         results.setPreferredScrollableViewportSize(new Dimension(400,200));
-		mainFrame.getContentPane().add(results);		
+		//mainFrame.getContentPane().add(results);
+		JScrollPane pane = new JScrollPane(results);
+		panel.add(pane);
+		mainFrame.add(panel);
 	}
 
 }
