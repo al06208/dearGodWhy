@@ -29,10 +29,10 @@ public class ConnectURL {
     public static void main(String[] args) {
 
         // Create a variable for the connection string.
-        String connectionUrl = "jdbc:sqlserver://den1.mssql8.gear.host;databaseName=gsuprojectdb;user=gsuprojectdb;password=thisisbullshit123!";
+        String connectionUrl = "jdbc:sqlserver://den1.mssql7.gear.host;databaseName=gsuprojectdbnew;user=gsuprojectdbnew;password=thisisbullshit123!";
 
         try (Connection con = DriverManager.getConnection(connectionUrl); Statement stmt = con.createStatement();) {
-            String SQL = "SELECT * FROM products";
+            String SQL = "SELECT COUNT as FROM testTable";
             ResultSet rs = stmt.executeQuery(SQL);
 
             // Iterate through the data in the result set and display it.
