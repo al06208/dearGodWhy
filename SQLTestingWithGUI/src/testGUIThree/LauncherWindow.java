@@ -19,11 +19,11 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
+import javax.swing.JComboBox;
 
 public class LauncherWindow {
 
 	private JFrame frame;
-	private JTextField txtManView;
 
 	/**
 	 * Launch the application.
@@ -66,23 +66,25 @@ public class LauncherWindow {
 		btnTestTable.setBounds(10, 11, 115, 23);
 		frame.getContentPane().add(btnTestTable);
 		
+
+		String[] comboTables = {"CargoTrains","City","Conductors","Employees","Passengers","PassengerTrains","Routes","Shipments","States","Station","Tickets","Trains","Trips"};
+		JComboBox<String> comboBox = new JComboBox<String>(comboTables);
+		comboBox.setBounds(10, 89, 115, 20);
+		frame.getContentPane().add(comboBox);
+		
 		JButton btnManual = new JButton("Manual View");
 		btnManual.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				createViewFrame(txtManView.getText());
+				createViewFrame((String)comboBox.getSelectedItem());
 			}
 		});
 		btnManual.setBounds(10, 45, 115, 23);
 		frame.getContentPane().add(btnManual);
 		
-		txtManView = new JTextField();
-		txtManView.setBounds(10, 90, 115, 20);
-		frame.getContentPane().add(txtManView);
-		txtManView.setColumns(10);
-		
 		JLabel lblTableToView = DefaultComponentFactory.getInstance().createLabel("Table to view:");
 		lblTableToView.setBounds(10, 73, 92, 14);
 		frame.getContentPane().add(lblTableToView);
+
 	}
 
 
