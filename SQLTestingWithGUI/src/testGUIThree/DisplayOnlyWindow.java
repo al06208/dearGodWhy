@@ -113,8 +113,6 @@ public class DisplayOnlyWindow extends JFrame {
             int index = 0;
             int indexTwo = 0;
 	        while(rs.next()) {
-//	        	dtl.setValueAt(rs.getString("primaryKey"), index, 0);
-//	        	dtl.setValueAt(rs.getString("testString"), index, 1);
 	        	indexTwo = 0;
 	        	for(String s:columns) {
 	        		dtl.setValueAt(rs.getString(s), index, indexTwo);

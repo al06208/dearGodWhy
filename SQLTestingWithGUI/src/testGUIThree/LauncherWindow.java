@@ -54,7 +54,7 @@ public class LauncherWindow {
 	private void initialize() {
 		frmTrainviewLauncher = new JFrame();
 		frmTrainviewLauncher.setTitle("TrainView Launcher");
-		frmTrainviewLauncher.setBounds(100, 100, 153, 190);
+		frmTrainviewLauncher.setBounds(100, 100, 153, 377);
 		frmTrainviewLauncher.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmTrainviewLauncher.getContentPane().setLayout(null);
 		
@@ -67,23 +67,23 @@ public class LauncherWindow {
 		btnTestTable.setBounds(10, 11, 115, 23);
 		frmTrainviewLauncher.getContentPane().add(btnTestTable);
 		
-
-		String[] comboTables = {"CargoTrains","City","Conductors","Employees","Passengers","PassengerTrains","Routes","Shipments","States","Station","Tickets","Trains","ShipmentDetails"};
+		//Combobox of the different tables
+		String[] comboTables = {"CargoTrains","City","Conductors","Employees","Passengers","PassengerTrains","Routes","ShipmentDetails","Shipments","States","Station","Tickets","Trains"};
 		JComboBox comboBox = new JComboBox(comboTables);
-		comboBox.setBounds(10, 120, 115, 20);
+		comboBox.setBounds(10, 286, 115, 20);
 		frmTrainviewLauncher.getContentPane().add(comboBox);
-		
+		//Button to launch a direct view of the table selected
 		JButton btnManual = new JButton("Manual View");
 		btnManual.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				createViewFrame((String)comboBox.getSelectedItem());
 			}
 		});
-		btnManual.setBounds(10, 79, 115, 23);
+		btnManual.setBounds(10, 245, 115, 23);
 		frmTrainviewLauncher.getContentPane().add(btnManual);
 		
 		JLabel lblTableToView = DefaultComponentFactory.getInstance().createLabel("Table to view:");
-		lblTableToView.setBounds(10, 102, 92, 14);
+		lblTableToView.setBounds(10, 268, 92, 14);
 		frmTrainviewLauncher.getContentPane().add(lblTableToView);
 		//Listener invokes station frame
 		JButton btnStationView = new JButton("Station View");
@@ -102,6 +102,23 @@ public class LauncherWindow {
 		});
 		btnStationView.setBounds(10, 45, 115, 23);
 		frmTrainviewLauncher.getContentPane().add(btnStationView);
+		
+		JButton btnPassengers = new JButton("Passengers");
+		btnPassengers.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						JFrame frame = new PassengerSublauncher();
+			            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			            frame.setLocationByPlatform(true);
+			            frame.setVisible(true);
+			            frame.setResizable(false);
+					}
+				});
+			}
+		});
+		btnPassengers.setBounds(10, 79, 115, 23);
+		frmTrainviewLauncher.getContentPane().add(btnPassengers);
 
 	}
 
