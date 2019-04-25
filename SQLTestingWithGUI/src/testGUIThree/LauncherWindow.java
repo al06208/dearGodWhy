@@ -23,7 +23,7 @@ import javax.swing.JComboBox;
 
 public class LauncherWindow {
 
-	private JFrame frame;
+	private JFrame frmTrainviewLauncher;
 
 	/**
 	 * Launch the application.
@@ -33,7 +33,7 @@ public class LauncherWindow {
 			public void run() {
 				try {
 					LauncherWindow window = new LauncherWindow();
-					window.frame.setVisible(true);
+					window.frmTrainviewLauncher.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -52,10 +52,11 @@ public class LauncherWindow {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 153, 208);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+		frmTrainviewLauncher = new JFrame();
+		frmTrainviewLauncher.setTitle("TrainView Launcher");
+		frmTrainviewLauncher.setBounds(100, 100, 153, 190);
+		frmTrainviewLauncher.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmTrainviewLauncher.getContentPane().setLayout(null);
 		
 		JButton btnTestTable = new JButton("testTable");
 		btnTestTable.addActionListener(new ActionListener() {
@@ -64,13 +65,13 @@ public class LauncherWindow {
 			}
 		});
 		btnTestTable.setBounds(10, 11, 115, 23);
-		frame.getContentPane().add(btnTestTable);
+		frmTrainviewLauncher.getContentPane().add(btnTestTable);
 		
 
-		String[] comboTables = {"CargoTrains","City","Conductors","Employees","Passengers","PassengerTrains","Routes","Shipments","States","Station","Tickets","Trains","Trips"};
-		JComboBox<String> comboBox = new JComboBox<String>(comboTables);
-		comboBox.setBounds(10, 89, 115, 20);
-		frame.getContentPane().add(comboBox);
+		String[] comboTables = {"CargoTrains","City","Conductors","Employees","Passengers","PassengerTrains","Routes","Shipments","States","Station","Tickets","Trains","ShipmentDetails"};
+		JComboBox comboBox = new JComboBox(comboTables);
+		comboBox.setBounds(10, 120, 115, 20);
+		frmTrainviewLauncher.getContentPane().add(comboBox);
 		
 		JButton btnManual = new JButton("Manual View");
 		btnManual.addActionListener(new ActionListener() {
@@ -78,16 +79,34 @@ public class LauncherWindow {
 				createViewFrame((String)comboBox.getSelectedItem());
 			}
 		});
-		btnManual.setBounds(10, 45, 115, 23);
-		frame.getContentPane().add(btnManual);
+		btnManual.setBounds(10, 79, 115, 23);
+		frmTrainviewLauncher.getContentPane().add(btnManual);
 		
 		JLabel lblTableToView = DefaultComponentFactory.getInstance().createLabel("Table to view:");
-		lblTableToView.setBounds(10, 73, 92, 14);
-		frame.getContentPane().add(lblTableToView);
+		lblTableToView.setBounds(10, 102, 92, 14);
+		frmTrainviewLauncher.getContentPane().add(lblTableToView);
+		//Listener invokes station frame
+		JButton btnStationView = new JButton("Station View");
+		btnStationView.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						JFrame frame = new StationOverview();
+			            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			            frame.setLocationByPlatform(true);
+			            frame.setVisible(true);
+			            frame.setResizable(false);
+					}
+				});
+			}
+		});
+		btnStationView.setBounds(10, 45, 115, 23);
+		frmTrainviewLauncher.getContentPane().add(btnStationView);
 
 	}
 
-
+//TODO: Remove test methods
+	//Creates a window that specifically reads the testTable
 public static void createTestFrame()
 {
     EventQueue.invokeLater(new Runnable()
@@ -104,6 +123,7 @@ public static void createTestFrame()
     });
 }
 
+//Creates a generic SQL Table Viewer with no edit functionality
 public static void createViewFrame(String table) {
 	EventQueue.invokeLater(new Runnable() {
 		public void run() {
