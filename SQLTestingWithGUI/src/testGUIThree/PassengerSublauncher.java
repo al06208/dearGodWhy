@@ -49,7 +49,7 @@ public class PassengerSublauncher extends JFrame {
 	 */
 	public PassengerSublauncher() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 136, 214);
+		setBounds(100, 100, 170, 214);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -72,7 +72,7 @@ public class PassengerSublauncher extends JFrame {
 			    });
 			}
 		});
-		btnNewUser.setBounds(10, 11, 100, 23);
+		btnNewUser.setBounds(10, 11, 131, 23);
 		contentPane.add(btnNewUser);
 		
 		JButton btnEdit = new JButton("Edit Profile");
@@ -93,24 +93,39 @@ public class PassengerSublauncher extends JFrame {
 			    });
 			}
 		});
-		btnEdit.setBounds(10, 110, 100, 23);
+		btnEdit.setBounds(10, 110, 131, 23);
 		contentPane.add(btnEdit);
 		
 		txtEmailaddress = new JTextField();
 		txtEmailaddress.setText("Email Address");
-		txtEmailaddress.setBounds(10, 45, 100, 20);
+		txtEmailaddress.setBounds(10, 45, 131, 20);
 
 		contentPane.add(txtEmailaddress);
 		txtEmailaddress.setColumns(10);
 		
 		JButton btnLogin = new JButton("Login");
-
-		btnLogin.setBounds(10, 76, 100, 23);
+		btnLogin.setBounds(10, 76, 131, 23);
 		contentPane.add(btnLogin);
 		
 		JButton btnTickets = new JButton("Tickets");
+		btnTickets.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable()
+			    {
+			        @Override
+			        public void run()
+			        {
+			            JFrame frame = new TicketManager(txtEmailaddress.getText());
+			            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			            frame.setLocationByPlatform(true);
+			            frame.setVisible(true);
+			            frame.setResizable(false);
+			        }
+			    });
+			}
+		});
 		btnTickets.setEnabled(false);
-		btnTickets.setBounds(10, 144, 100, 23);
+		btnTickets.setBounds(10, 144, 131, 23);
 		contentPane.add(btnTickets);
 		txtEmailaddress.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {

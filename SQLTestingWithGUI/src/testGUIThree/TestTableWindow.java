@@ -78,7 +78,6 @@ public class TestTableWindow extends JFrame {
 	private int getNumber(String table, String primaryKey) {
 		try (Connection con = DriverManager.getConnection(connectionUrl); Statement stmt = con.createStatement();) {
             String SQL = "SELECT COUNT("+primaryKey+") as numKeys FROM "+table+";";
-            JOptionPane.showMessageDialog(null, SQL);
             ResultSet rs = stmt.executeQuery(SQL);
             rs.next();
             int numRows = Integer.parseInt(rs.getString("numKeys"));
@@ -93,7 +92,6 @@ public class TestTableWindow extends JFrame {
 	private void fetchNEdit(DefaultTableModel dtl, String table) {
 		try (Connection con = DriverManager.getConnection(connectionUrl); Statement stmt = con.createStatement();) {
             String SQL = "SELECT * FROM "+table+";";
-            JOptionPane.showMessageDialog(null, SQL);
             ResultSet rs = stmt.executeQuery(SQL);
             int index = 0;
 	        while(rs.next()) {

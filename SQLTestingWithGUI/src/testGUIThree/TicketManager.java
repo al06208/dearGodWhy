@@ -3,6 +3,8 @@ package testGUIThree;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -12,6 +14,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -19,57 +22,40 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import com.jgoodies.forms.factories.DefaultComponentFactory;
 
-public class DisplayOnlyWindow extends JFrame {
+public class TicketManager extends JFrame {
 
-	private String connectionUrl = "jdbc:sqlserver://den1.mssql7.gear.host;databaseName=gsuprojectdbnew;user=gsuprojectdbnew;password=thisisbullshit123!";
 	private JPanel contentPane;
-
+	private String email;
+	private String pid;
+	private String connectionUrl = "jdbc:sqlserver://den1.mssql7.gear.host;databaseName=gsuprojectdbnew;user=gsuprojectdbnew;password=thisisbullshit123!";
+	
 	/**
 	 * Create the frame.
 	 */
-	public DisplayOnlyWindow(String tableName) {
+	public TicketManager(String email) {
+		setTitle("Ticket Manager");
+		this.email = email;
+		this.pid = getPID(email);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 503, 447);
+		setBounds(100, 100, 503, 270);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
 		//GET TABLE DATA
-		int colNum;
-		ArrayList<String> colNamesAL = new ArrayList<String>();
-		//This gets the number of columns, then uses that to get the column names from the metadata
-		try (Connection con = DriverManager.getConnection(connectionUrl); Statement stmt = con.createStatement();) {
-            String SQL = "SELECT * FROM "+tableName+";";
-            ResultSet rs = stmt.executeQuery(SQL);
-            ResultSetMetaData rsmd = rs.getMetaData();
-            colNum = rsmd.getColumnCount();
-            for(int i=1;i<=colNum;i++) {
-            	// TODO: DELETE JOptionPane.showMessageDialog(null, "column name is "+rsmd.getColumnName(i));
-            	colNamesAL.add(rsmd.getColumnName(i));
-            }
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-		
-		//BUILD TABLE
-		//String[] columns = (String[])colNamesAL.toArray();
-		String[] columns = Arrays.copyOf(colNamesAL.toArray(), colNamesAL.size(), String[].class);
-
-		
-        int numRows = getNumber("testTable");
+		String[] columns = {"Price","JourneyDate","DepartureTime","ArrivalTime"};	
+        int numRows = getNumber("Tickets");
         DefaultTableModel resTable = new DefaultTableModel(columns, numRows);
-        fetchNEdit(resTable, tableName, columns);
+        fetchNEdit(resTable, columns);
 		JTable results = new JTable(resTable);
 		//ADD TO GUi
 		results.setBounds(10,10,400,400);
         results.setPreferredScrollableViewportSize(new Dimension(400,200));
         JScrollPane pane = new JScrollPane(results);
-		pane.setBounds(10, 11, 464, 314);
+		pane.setBounds(10, 11, 464, 173);
 		contentPane.setLayout(null);
 		contentPane.setLayout(null);
 		contentPane.add(pane);
@@ -78,11 +64,32 @@ public class DisplayOnlyWindow extends JFrame {
 		JButton btnRefresh = new JButton("Refresh");
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				fetchNEdit(resTable, tableName, columns);
+				fetchNEdit(resTable, columns);
 			}
 		});
-		btnRefresh.setBounds(385, 336, 89, 23);
+		btnRefresh.setBounds(10, 195, 148, 23);
 		contentPane.add(btnRefresh);
+		
+		JButton btnNewTicket = new JButton("New Ticket");
+		btnNewTicket.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable()
+			    {
+			        @Override
+			        public void run()
+			        {
+			            JFrame frame = new TicketBuilder(email, pid);
+			            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			            frame.setLocationByPlatform(true);
+			            frame.setVisible(true);
+			            frame.setResizable(false);
+			        }
+			    });
+			}
+		});
+		btnNewTicket.setBounds(329, 195, 148, 23);
+		contentPane.add(btnNewTicket);
+
 	}
 	
 	//Returns the number of rows in the table
@@ -100,11 +107,11 @@ public class DisplayOnlyWindow extends JFrame {
         }
 	}
 	
-	//Fetches the state of the specified table, then updates the given data model to match it
-	private void fetchNEdit(DefaultTableModel dtl, String table, String[] columns) {
-		int numrows = getNumber(table);
+	//Fetches the state of the table, then updates the given data model to match it
+	private void fetchNEdit(DefaultTableModel dtl, String[] columns) {
+		int numrows = getNumber("Tickets");
 		try (Connection con = DriverManager.getConnection(connectionUrl); Statement stmt = con.createStatement();) {
-            String SQL = "SELECT * FROM "+table+";";
+            String SQL = "SELECT Tickets.Price, Tickets.JourneyDate, Tickets.DepartureTime, Tickets.ArrivalTime FROM Tickets LEFT JOIN Passengers ON Tickets.PassengerID = Passengers.PassengerID WHERE Passengers.EmailAddress = '"+email+"';";
             ResultSet rs = stmt.executeQuery(SQL);
             dtl.setRowCount(numrows);
             int index = 0;
@@ -123,5 +130,17 @@ public class DisplayOnlyWindow extends JFrame {
         }
 	}
 	
-
+	private String getPID(String email) {
+		try (Connection con = DriverManager.getConnection(connectionUrl); Statement stmt = con.createStatement();) {
+            String SQL = ("SELECT emailAddress, passengerid FROM Passengers WHERE EmailAddress = '"+email+"';");
+            ResultSet rs = stmt.executeQuery(SQL);
+            rs.next();
+            String numRows = rs.getString("passengerID");
+            return numRows;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return "something is messed up";
+        }
+	}
 }
